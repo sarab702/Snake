@@ -21,6 +21,8 @@ public class gamePanel extends JPanel implements ActionListener {
     Timer timer;
     Random random;
 
+    JButton restartButton;
+
     gamePanel() {
         random = new Random();
         this.setPreferredSize(new Dimension(SCREEN_WIDTH, SCREEN_HEIGHT));
@@ -28,6 +30,20 @@ public class gamePanel extends JPanel implements ActionListener {
         this.setFocusable(true);
         this.addKeyListener(new MyKeyAdapter());
         startGame();
+
+        restartButton = new JButton("Restart");
+        restartButton.setBounds((SCREEN_WIDTH - 100) / 2, SCREEN_HEIGHT/2 +150, 100, 50);
+        restartButton.setFont(new Font("Ariel", Font.BOLD, 20));
+        restartButton.setBackground(Color.green);
+        restartButton.addActionListener(new ActionListener() {
+            //override
+            public void actionPerformed(ActionEvent e) {
+                restartGame();
+            }
+        });
+
+        restartButton.setVisible(false); // hide it until end
+        this.add(restartButton);
     }
 
     public void startGame() {
@@ -114,6 +130,7 @@ public class gamePanel extends JPanel implements ActionListener {
 
         if (!running) {
             timer.stop();
+            restartButton.setVisible(true); // show restart button et end
         }
     }
 
@@ -137,7 +154,20 @@ public class gamePanel extends JPanel implements ActionListener {
         }
         repaint();
     }
-
+    public void restartGame(){
+        bodyParts = 6;
+        applesEaten = 0;
+        direction = 'R';
+        for(int i = 0; i < bodyParts; i++) {
+            x[i] = 0;
+            y[i] = 0;
+        }
+        newApple();
+        running = true;
+        timer.start();
+        restartButton.setVisible(false); // hide restart button again
+        repaint();
+    }
     public class MyKeyAdapter extends KeyAdapter {
         @Override
         public void keyPressed(KeyEvent e) {
